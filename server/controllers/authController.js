@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { validateIdentifier } from '../utils/validate.js';
 
 export const registerOrLogin = async (req, res) => {
-  console.log('Register/Login Request:', req.body);
+ 
   try {
     const { identifier } = req.body;
 

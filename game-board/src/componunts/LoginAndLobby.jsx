@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useSocket } from '../hooks/useSocket';
+import { GameBoard } from './GameBoard';
 
 export function LoginAndLobby() {
   // Step 1: User Identifier Input
@@ -156,21 +157,35 @@ if (!currentUser) {
   // --------------------------------------------------------------------------
   // SCREEN 3A: PLAY AGAINST COMPUTER (OFFLINE)
   // --------------------------------------------------------------------------
-  if (gameMode === 'AI') {
-    return (
-      <div style={styles.card}>
-        <h2>VS Computer Mode</h2>
-        <p>Local AI board implementation goes here!</p>
-        <button
-          onClick={() => setGameMode('NONE')}
-          style={styles.textButton}
-        >
-          ← Back to Mode Selection
-        </button>
-      </div>
-    );
-  }
+// Inside LoginAndLobby component...
 
+// 1. Render AI Game Mode
+if (gameMode === 'AI') {
+  return (
+    <div style={styles.card}>
+      <h2>🤖 VS Computer Mode</h2>
+      <GameBoard isAiMode={true} />
+      <button onClick={() => setGameMode('NONE')} style={styles.textButton}>
+        ← Back to Mode Selection
+      </button>
+    </div>
+  );
+}
+
+// 2. Render Online Match Active Screen
+if (gameState) {
+  return (
+    <div style={styles.card}>
+      <h2>⚔️ Online Match</h2>
+      <GameBoard
+        isAiMode={false}
+        gameState={gameState}
+        onMakeMove={makeMove}
+        onReset={resetGameLocalState}
+      />
+    </div>
+  );
+}
   // --------------------------------------------------------------------------
   // SCREEN 3B: ONLINE LOBBY & MATCHMAKING (SOCKET.IO)
   // --------------------------------------------------------------------------
