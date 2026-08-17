@@ -129,7 +129,7 @@ export function setupSocket(server) {
       const timerId = setTimeout(() => {
         socket.emit('challenge_timeout', { message: `${cleanTarget} did not respond in time.` });
         io.to(targetSocketId).emit('challenge_cancelled', { from: playerIdentifier });
-      }, 30000);
+      }, 6*10000);
 
       socket.pendingChallengeTimer = timerId;
     });

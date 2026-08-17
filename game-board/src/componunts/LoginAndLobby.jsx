@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSocket } from '../hooks/useSocket';
-import { GameBoard } from './GameBoard';
+import { GameBoard } from './GameBoard'; 
 
 export function LoginAndLobby() {
   // Step 1: User Identifier Input
@@ -39,7 +39,7 @@ const handleLoginSubmit = async (e) => {
 
   try {
     // 1. Send authentication request to Express backend
-    const response = await fetch('http://localhost:3000/auth/register-or-login', {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/register-or-login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
