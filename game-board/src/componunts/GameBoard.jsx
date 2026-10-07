@@ -109,7 +109,7 @@ export function GameBoard({ gameState, onMakeMove, onReset, isAiMode }) {
   };
 
   return (
-    <div style={styles.boardContainer}>
+    <div style={styles.boardContainer} className='board-container'>
       {/* MATCH HEADER INFO */}
       <div style={styles.header}>
         <div style={styles.playerTag}>
@@ -122,7 +122,10 @@ export function GameBoard({ gameState, onMakeMove, onReset, isAiMode }) {
       </div>
 
       {/* 3x3 GRID */}
-      <div style={styles.grid}>
+      <div style={styles.grid} className='game-board'>
+        <div className='turn-data'>
+          <h4>waiting for plyer to play ...</h4>
+        </div>
         {currentBoard.map((square, index) => {
           const isWinningSquare = winningLine.includes(index);
           return (
@@ -142,7 +145,9 @@ export function GameBoard({ gameState, onMakeMove, onReset, isAiMode }) {
           );
         })}
       </div>
-
+        <div className='game-data'>
+          <h4>game data</h4>
+        </div>
       {/* LEAVE / RESET GAME BUTTON */}
       {isGameOver && (
         <button
@@ -196,8 +201,8 @@ const styles = {
     display: 'grid',
     gridTemplateColumns: 'repeat(3, 1fr)',
     gap: '10px',
-    width: '300px',
-    height: '300px'
+    width: '100%',
+    aspectRatio: '1/1'
   },
   square: {
     width: '100%',
