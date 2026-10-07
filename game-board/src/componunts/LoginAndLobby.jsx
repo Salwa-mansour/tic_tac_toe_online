@@ -230,7 +230,7 @@ if (gameState) {
         <ul style={styles.playerList}>
           {onlinePlayers.map((player) => (
             <li key={player} style={styles.playerItem}>
-              <span>👤 {player}</span>
+              <span className='player-name'>👤{player}</span>
               <button
                 onClick={() => sendChallenge(player)}
                 style={styles.smallButton}

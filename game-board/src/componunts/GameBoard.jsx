@@ -92,20 +92,23 @@ export function GameBoard({ gameState, onMakeMove, onReset, isAiMode }) {
   const winningLine = isAiMode ? localWinnerInfo?.winningLine || [] : gameState?.winningLine || [];
 
   // Determine game status text
+ // Determine game status message with structured JSX
   const getStatusMessage = () => {
     if (isAiMode) {
-      if (localWinnerInfo?.isDraw) return "It's a Draw! 🤝";
-      if (localWinnerInfo?.winner === 'X') return '🎉 You Won!';
-      if (localWinnerInfo?.winner === 'O') return '🤖 Computer Won!';
-      return localIsMyTurn ? 'Your Turn (X)' : 'Computer is thinking... 🤔';
+      if (localWinnerInfo?.isDraw) return <span><span className="status-icon">🤝</span> It's a Draw!</span>;
+      if (localWinnerInfo?.winner === 'X') return <span><span className="status-icon">🎉</span> You Won!</span>;
+      if (localWinnerInfo?.winner === 'O') return <span><span className="status-icon">🤖</span> Computer Won!</span>;
+      return <span>{localIsMyTurn ? 'Your Turn (X)' : <span><span className="status-icon">🤔</span> Computer is thinking...</span>}</span>;
     }
 
     if (!gameState) return 'Waiting for match...';
-    if (gameState.isDraw) return "It's a Draw! 🤝";
+    if (gameState.isDraw) return <span><span className="status-icon">🤝</span> It's a Draw!</span>;
     if (gameState.isGameOver) {
-      return gameState.didIWin ? '🎉 You Won!' : '❌ Opponent Won!';
+      return gameState.didIWin 
+        ? <span><span className="status-icon">🎉</span> You Won!</span> 
+        : <span><span className="status-icon">❌</span> Opponent Won!</span>;
     }
-    return gameState.isMyTurn ? 'Your Turn!' : `Waiting for ${gameState.opponent}...`;
+    return gameState.isMyTurn ? 'Your Turn!' : <span>Waiting for {gameState.opponent}...</span>;
   };
 
   return (
@@ -121,23 +124,29 @@ export function GameBoard({ gameState, onMakeMove, onReset, isAiMode }) {
         </div>
       </div>
 
-      {/* 3x3 GRID */}
+      {/* 3x3 GRID CONTAINER */}
       <div style={styles.grid} className='game-board'>
-        <div className='turn-data'>
-          <h4>waiting for plyer to play ...</h4>
-        </div>
+        
+        {/* TURN OVERLAY (Shown when it's NOT your turn) */}
+        {!isMyTurn && !isGameOver && (
+          <div className='turn-data' >
+            <h4>{getStatusMessage()}</h4>
+          </div>
+        )}
+
+        {/* 9 SQUARES */}
         {currentBoard.map((square, index) => {
           const isWinningSquare = winningLine.includes(index);
           return (
             <button
               key={index}
               onClick={() => handleSquareClick(index)}
-              disabled={isGameOver || square !== null || (!isAiMode && !isMyTurn)}
+              disabled={isGameOver || square !== null || !isMyTurn}
               style={{
                 ...styles.square,
                 backgroundColor: isWinningSquare ? '#b2f2bb' : '#f8f9fa',
                 color: square === 'X' ? '#1c7ed6' : '#e03131',
-                cursor: !isGameOver && square === null && (isAiMode ? isMyTurn : isMyTurn) ? 'pointer' : 'not-allowed'
+                cursor: !isGameOver && square === null && isMyTurn ? 'pointer' : 'not-allowed'
               }}
             >
               {square}
@@ -145,9 +154,14 @@ export function GameBoard({ gameState, onMakeMove, onReset, isAiMode }) {
           );
         })}
       </div>
-        <div className='game-data'>
-          <h4>game data</h4>
+
+      {/* GAME OVER OVERLAY / BANNER */}
+      {isGameOver && (
+        <div className='game-data' >
+          <h4>{getStatusMessage()}</h4>
         </div>
+      )}
+        
       {/* LEAVE / RESET GAME BUTTON */}
       {isGameOver && (
         <button
@@ -169,7 +183,7 @@ export function GameBoard({ gameState, onMakeMove, onReset, isAiMode }) {
   );
 }
 
-// Board Component Styles
+// Board Component Styles (Added basic relative positioning for overlays if your CSS file hasn't defined them yet)
 const styles = {
   boardContainer: {
     display: 'flex',
@@ -198,11 +212,28 @@ const styles = {
     fontSize: '15px'
   },
   grid: {
+    position: 'relative', // Ensures absolute overlays stay inside the board grid
     display: 'grid',
     gridTemplateColumns: 'repeat(3, 1fr)',
+    gridTemplateRows: 'repeat(3, 1fr)',
     gap: '10px',
     width: '100%',
     aspectRatio: '1/1'
+  },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(255, 255, 255, 0.75)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 10,
+    borderRadius: '8px',
+    fontWeight: 'bold',
+    color: '#333'
   },
   square: {
     width: '100%',
@@ -214,6 +245,14 @@ const styles = {
     outline: 'none',
     transition: 'all 0.2s ease'
   },
+  gameOverBanner: {
+    padding: '10px',
+    backgroundColor: '#fff9db',
+    border: '1px solid #fcc419',
+    borderRadius: '6px',
+    textAlign: 'center',
+    width: '100%'
+  },
   resetButton: {
     padding: '10px 20px',
     fontSize: '16px',
@@ -222,6 +261,7 @@ const styles = {
     backgroundColor: '#228be6',
     border: 'none',
     borderRadius: '6px',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    zIndex:30,
   }
 };
