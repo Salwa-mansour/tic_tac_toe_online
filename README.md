@@ -19,7 +19,6 @@ A lightweight, real-time multiplayer web game built for quick matches. It featur
 ### ✨ Key Features
 * **Real-Time Multiplayer:** Instant move updates and turn syncing using Socket.io.
 * **Minimalist UI:** Clean, distraction-free design focused on smooth UX.
-* **Score Tracking:** Tracks and persists previous wins and match history.
 * **Room Management:** Easily create or join private matches via room codes.
 
 ---
